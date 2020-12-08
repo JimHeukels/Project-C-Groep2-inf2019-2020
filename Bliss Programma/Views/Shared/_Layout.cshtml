@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Bliss Programma</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link href="~/css/SideMenu.css" rel="stylesheet" />
+    <link href="~/css/StickyNavbar.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <div id="main">
+        <div id="navbar">
+            <button class="openbtn" onclick="toggleNav() ">☰</button>
+            <a href="/home">Bliss Programma</a>
+            <a href="/Identity/Account/Login">Login</a>
+        </div>
+    </div>
+
+    <div id="mySidebar" class="sidebar">
+        <a href="/User/Home">Home</a>
+        <a href="/Locaties">Locaties</a>
+        <a href="/User/Reservation">Reservation</a>
+        <a href="/Identity/Account/Manage">Account</a>
+        <a href="/Home/Privacy">Privacy</a>
+        <a href="/Werknemers">Werknemer</a>
+        <a href="/Reserverings">Reserveringen</a>
+        <footer class="footer text-muted">
+            <div class="container">
+                &copy; 2020 - Bliss Digital
+            </div>
+        </footer>
+    </div>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+
+
+    <script>
+        /* SideBar */
+        document.getElementById("openbtn").addEventListener("click", toggleNav);
+
+        function toggleNav() {
+            if (document.getElementById("mySidebar").style.width == "250px") {
+                return closeNav();
+            }
+            else {
+                return openNav();
+            }
+        }
+
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            document.getElementById("main").style.marginLeft = "0";
+        }
+    </script>
+
+
+    <script>
+        /* sticky navbar */
+        window.onscroll = function () { myFunction() };
+
+        var navbar = document.getElementById("navbar");
+        var sticky = navbar.offsetTop;
+
+        function myFunction() {
+            if (window.pageYOffset >= sticky) {
+                navbar.classList.add("sticky")
+            } else {
+                navbar.classList.remove("sticky");
+            }
+        }
+    </script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

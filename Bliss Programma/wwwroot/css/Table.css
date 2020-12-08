@@ -1,0 +1,17 @@
+﻿table, th, td {
+    border: 1px solid black;
+    text-align: center;
+}
+/*rows*/
+tr:nth-child(even) {
+    background-color: #eee;
+}
+
+tr:nth-child(odd) {
+    background-color: #fff;
+}
+/*header*/
+th {
+    color: white;
+    background-color: black;
+}

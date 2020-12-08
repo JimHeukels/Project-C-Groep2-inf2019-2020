@@ -1,0 +1,88 @@
+﻿@model Bliss_Programma.Models.Locatie
+
+@{
+    ViewData["Title"] = "Ruimtes";
+}
+
+<h1>Ruimtes</h1>
+
+
+<p>
+    <a asp-area="" asp-controller="Ruimtes" asp-action="Create">Create New</a>
+</p>
+@if (Model.Werkplekken != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Werkplekken[0].Naam)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Werkplekken[0].Oppervlakte)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Werkplekken[0].MaxWerkplekken)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.Werkplekken)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Naam)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Oppervlakte)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaxWerkplekken)
+                </td>
+                <td>
+
+
+                    <a asp-area="" asp-controller="Ruimtes" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-area="" asp-controller="Ruimtes" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-area="" asp-controller="Ruimtes" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Werkplekken[0].Naam)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Werkplekken[0].Oppervlakte)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Werkplekken[0].MaxWerkplekken)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+    </table>
+}
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
