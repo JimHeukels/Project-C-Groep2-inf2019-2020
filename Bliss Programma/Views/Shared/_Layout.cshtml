@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -16,32 +21,44 @@
         <div id="navbar">
             <button class="openbtn" onclick="toggleNav() ">☰</button>
             <a href="/home">Bliss Programma</a>
-            <a href="/Identity/Account/Login">Login</a>
+            <partial name="_LoginPartial" />
         </div>
     </div>
 
-    <div id="mySidebar" class="sidebar">
-        <a href="/User/Home">Home</a>
-        <a href="/Locaties">Locaties</a>
-        <a href="/User/Reservation">Reservation</a>
-        <a href="/Identity/Account/Manage">Account</a>
-        <a href="/Home/Privacy">Privacy</a>
-        <a href="/Werknemers">Werknemer</a>
-        <a href="/Reserverings">Reserveringen</a>
-        <footer class="footer text-muted">
-            <div class="container">
-                &copy; 2020 - Bliss Digital
-            </div>
-        </footer>
-    </div>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div id="mySidebar" class="sidebar">
+            <a href="/User/Home">Home</a>
+            <a href="/Locaties">Locaties</a>
+            <a href="/User/Reservation">Reservation</a>
+            <a href="/Reserverings">Reserveringen</a>
+            <a href="/Identity/Account/Manage/Index">Account</a>
+            <a href="/Home/Privacy">Privacy</a>
+            <footer class="footer text-muted">
+                <div class="container">
+                    &copy; 2020 - Bliss Digital
+                </div>
+            </footer>
+        </div>
+    }
+    else
+    {
+        <div id="mySidebar" class="sidebar">
+            <a href="/Home/Privacy">Privacy</a>
+            <footer class="footer text-muted">
+                <div class="container">
+                    &copy; 2020 - Bliss Digital
+                </div>
+            </footer>
+        </div>
+    }
 
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-
-
+    
 
     <script>
         /* SideBar */
@@ -90,3 +107,4 @@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+
