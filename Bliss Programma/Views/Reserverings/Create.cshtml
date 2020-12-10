@@ -26,7 +26,7 @@
                 @*
                     
                 *@
-                <input asp-for="WerknemerId" class="form-control" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
+                <input disabled asp-for="WerknemerId" class="form-control" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
                 <span asp-validation-for="WerknemerId" class="text-danger"></span>
             </div>
             <div class="form-group">
