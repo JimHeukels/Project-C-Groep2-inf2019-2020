@@ -73,13 +73,31 @@ namespace Bliss_Programma.Controllers
         {
             if (ModelState.IsValid)
             {
-                //todo: check _context of er al een reserveringen bestaan in die ruimte en of dat onder het maximum ligt
-                //als er idd minder reserveringen zijn, dan _context.add
-                //if (_context.) {
+                //currentRuimte haalt uit de database de informatie op van de geslecteerde ruimte. Door Single te gebruiken ipv where krijg je daadwerkelijk
+                //één object terug (ipv een list met objecten wanneer je Where zou gebruiken) wat later aangesproken kan worden.
+                //reserveringenCount haalt vervolgens het huidige aantal reserveringen op uit het object
+                var currentRuimte = _context.Ruimte.Single(y => y.Id == reservering.RuimteId);
+                int reserveringenCount = _context.Reservering.Count(y => y.RuimteId == reservering.RuimteId);
+                
+                //Doordat we hierboven list hebben gebruikt kunnen we nu maxPersonenRuimte vullen door het currentRuimte object direct aan te spreken.
+                var maxPersonenRuimte = currentRuimte.MaxWerkplekken;
+                
+
+                if (reserveringenCount < maxPersonenRuimte)
+                {
                     _context.Add(reservering);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index)); 
-                //}
+                    return RedirectToAction(nameof(Index));
+                }
+
+                else
+                {
+                    //Gebruiker wordt nu terug gestuurd naar de reservering index pagina
+                    //todo: geef de gebruiker een melding mee dat hij niet kan reserveren omdat er geen plek is.
+                    return RedirectToAction(nameof(Index));
+                }
+
+
             }
             ViewData["RuimteId"] = new SelectList(_context.Ruimte, "Id", "Id", reservering.RuimteId);
             return View(reservering);
