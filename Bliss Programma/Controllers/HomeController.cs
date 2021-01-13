@@ -20,6 +20,10 @@ namespace Bliss_Programma.Controllers
 
         public IActionResult Index()
         {
+            if(User.IsInRole("Admin"))
+            {
+
+            }
             return View();
         }
 

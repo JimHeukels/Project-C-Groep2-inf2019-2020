@@ -6,6 +6,11 @@
     <RootNamespace>Bliss_Programma</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20210112155221_updtaeid.cs" />
+    <Compile Remove="Data\Migrations\20210112155221_updtaeid.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.2" />

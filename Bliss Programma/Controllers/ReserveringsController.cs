@@ -41,8 +41,13 @@ namespace Bliss_Programma.Controllers
             // vervolgens kunnen we aan de hand van Linq een query schrijven naar die _context veriabele
             // In de Value variabele wordt standaard dus de id van de gebruiker opgeslagen.
             // Door x.Value dus mee te nemen in de query kunnen we alle reserveringen ophalen van 1 specifieke gebruiker
-            var applicationDbContext = _context.Reservering.Where(y => y.WerknemerId == x.Value && y.Datum >= DateTime.Now).Include(r => r.Ruimte).ThenInclude(x => x.Locatie).OrderBy(r => r.Datum);
-            return View(await applicationDbContext.ToListAsync());
+            var list = _context.Reservering.Include(c=>c.Ruimte).ToList();
+            if(!User.IsInRole("Admin"))
+            {
+                list = list.Where(c => c.WerknemerId == x.Value).ToList();
+            }
+            //var applicationDbContext = _context.Reservering.Where(y => y.WerknemerId == x.Value).Include(r => r.Ruimte);
+            return View(list);
         }
 
         // GET: Reserverings/Details/5
@@ -66,10 +71,14 @@ namespace Bliss_Programma.Controllers
 
         // GET: Reserverings/Create
         [Authorize]
-        public IActionResult Create()
+        public IActionResult Create(reservemodel model)
         {
-            ViewData["RuimteId"] = new SelectList(_context.Ruimte, "Id", "Naam");
-            return View();
+            ViewData["RuimteId"] = new SelectList(_context.Ruimte, "Id", "Id");
+            var reserve = new Reservering
+            {
+                Datum = model.Date
+            };
+            return View(reserve);
         }
 
         // POST: Reserverings/Create

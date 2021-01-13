@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -65,5 +66,48 @@ namespace Bliss_Programma.Models
         {
 
         }
+    }
+    public class reservemodel
+    {
+        public DateTime Date { get; set; }
+    }
+    public class AllUser
+    {
+        public string Id { get; set; }
+        public string Email { get; set; }
+        public string Name { get; set; }
+        public string Role { get; set; }
+        public string Prioriteit { get; set; }
+    }
+    public class ApplicationUser : IdentityUser
+    {
+        public string Name { get; set; }
+        public string Role { get; set; }
+        public string Prioriteit{ get; set; }
+    }
+    public class RegisterViewModel
+    {
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public string Role { get; set; }
+        public string Prioriteit { get; set; }
+
+        public bool IsAdmin { get; set; }
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
     }
 }
