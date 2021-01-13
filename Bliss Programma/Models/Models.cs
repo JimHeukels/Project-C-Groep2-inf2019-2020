@@ -55,6 +55,7 @@ namespace Bliss_Programma.Models
         public DateTime Datum { get; set; }
 
         public string WerknemerId { get; set; }
+        public string WerknemerEmail { get; set; }
 
         [ForeignKey("Ruimte")]
         public int RuimteId { get; set; }

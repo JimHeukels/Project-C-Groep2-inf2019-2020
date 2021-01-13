@@ -1,4 +1,5 @@
-﻿@model Bliss_Programma.Models.Reservering
+﻿@using System.Security.Claims;
+@model Bliss_Programma.Models.Reservering
 
 @{
     ViewData["Title"] = "Edit";
@@ -15,13 +16,20 @@
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Datum" class="control-label"></label>
-                <input asp-for="Datum" class="form-control" />
+                <input asp-for="Datum" class="form-control" type="date" />
                 <span asp-validation-for="Datum" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="WerknemerId" class="control-label"></label>
-                <input asp-for="WerknemerId" class="form-control" />
-                <span asp-validation-for="WerknemerId" class="text-danger"></span>
+                @*<label asp-for="WerknemerId" class="control-label"></label>
+                    <input asp-for="WerknemerId" class="form-control" />
+                    <span asp-validation-for="WerknemerId" class="text-danger"></span>*@
+
+                <input type="hidden" asp-for="WerknemerId" class="form-control" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" readonly="readonly" />
+            </div>
+            <div class="form-group">
+                <label asp-for="WerknemerEmail" class="control-label"></label>
+                <input asp-for="WerknemerEmail" class="form-control" value="@User.FindFirst(ClaimTypes.Name).Value" readonly="readonly" />
+                <span asp-validation-for="WerknemerEmail" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="RuimteId" class="control-label"></label>
