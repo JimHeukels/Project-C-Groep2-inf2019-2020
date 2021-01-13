@@ -1,0 +1,32 @@
+﻿@model IEnumerable<AllUser>
+@{
+    ViewData["Title"] = "Index";
+}
+<p>
+    <a asp-action="Create">Create User</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Name</th>
+            <th>role</th>
+            <th></th>
+        </tr>
+        
+    </thead>
+    <tbody>
+        @foreach(var u in Model)
+        {
+        <tr>
+            <td>@u.Email</td>
+            <td>@u.Name</td>
+            <td>@u.Role</td>
+            <td>
+                <a asp-action="Delete" asp-route-id="@u.Id" onclick="return confirm('Are you sure to delete this user?')">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+

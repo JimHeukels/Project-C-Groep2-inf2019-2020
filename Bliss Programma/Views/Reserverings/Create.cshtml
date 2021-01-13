@@ -16,7 +16,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Datum" class="control-label"></label>
-                <input asp-for="Datum" class="form-control" />
+                <input asp-for="Datum" class="form-control" type="date" />
                 <span asp-validation-for="Datum" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -26,7 +26,7 @@
                 @*
                     
                 *@
-                <input disabled asp-for="WerknemerId" class="form-control" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
+                <input asp-for="WerknemerId" readonly class="form-control" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" />
                 <span asp-validation-for="WerknemerId" class="text-danger"></span>
             </div>
             <div class="form-group">
