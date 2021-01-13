@@ -2,9 +2,11 @@
 @model Bliss_Programma.Models.Reservering
 
 
+
 @{
     ViewData["Title"] = "Create";
-    ViewData["Prio"] = 7;
+    Console.WriteLine(ViewData["Prio"]);
+
 }
 
 <h1>Create</h1>
@@ -22,7 +24,7 @@
             </div>
             <div class="form-group">
                 @*<label asp-for="WerknemerId" class="control-label"></label>
-            <select asp-for="WerknemerId" class="form-control" asp-items="ViewBag.WerknemerId"></select>*@
+                    <select asp-for="WerknemerId" class="form-control" asp-items="ViewBag.WerknemerId"></select>*@
                 @*<label asp-for="WerknemerId" class="control-label"></label>*@
 
                 <input type="hidden" asp-for="WerknemerId" class="form-control" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" readonly="readonly" />

@@ -30,23 +30,17 @@ namespace Bliss_Programma.Controllers
             // var x wrdt hieronder gedeclareerd en ingevuld met een user type. Dit is een standaard type(?) en heeft dus toegang tot gegevens van de gebruiker/sessie
             var x = User.FindFirst(ClaimTypes.NameIdentifier);
 
-            //todo: de x.value statement vervangen met een Admin check
-            if(x.Value == "46554b97-f02b-4ff6-bee4-9f91ee3be03a")
-            {
-                Console.WriteLine("test");
-                return View(await _context.Reservering.Include(r => r.Ruimte).ThenInclude(x => x.Locatie).OrderBy(r => r.Datum).ToListAsync());
-                
-            }
             // _context is de door ons gedefinieërde 'database' variabele.
-            // vervolgens kunnen we aan de hand van Linq een query schrijven naar die _context veriabele
+            // vervolgens kunnen we aan de hand van Linq een query schrijven naar die _context variabele
             // In de Value variabele wordt standaard dus de id van de gebruiker opgeslagen.
             // Door x.Value dus mee te nemen in de query kunnen we alle reserveringen ophalen van 1 specifieke gebruiker
-            var list = _context.Reservering.Include(c=>c.Ruimte).ToList();
-            if(!User.IsInRole("Admin"))
+            var list = _context.Reservering.Include(c => c.Ruimte).ThenInclude(r => r.Locatie).ToList();
+            if (!User.IsInRole("Admin"))
             {
                 list = list.Where(c => c.WerknemerId == x.Value).ToList();
             }
             //var applicationDbContext = _context.Reservering.Where(y => y.WerknemerId == x.Value).Include(r => r.Ruimte);
+
             return View(list);
         }
 
@@ -73,11 +67,14 @@ namespace Bliss_Programma.Controllers
         [Authorize]
         public IActionResult Create(reservemodel model)
         {
-            ViewData["RuimteId"] = new SelectList(_context.Ruimte, "Id", "Id");
+            ViewData["RuimteId"] = new SelectList(_context.Ruimte, "Id", "Naam");
             var reserve = new Reservering
             {
                 Datum = model.Date
             };
+            var x = User.FindFirst(ClaimTypes.NameIdentifier);
+            var prio = _context.Users.Single(u => u.Id == x.Value).Prioriteit;
+            ViewData["Prio"] = (7 * Int32.Parse(prio));
             return View(reserve);
         }
 
@@ -90,6 +87,8 @@ namespace Bliss_Programma.Controllers
         {
             if (ModelState.IsValid)
             {
+
+
                 //currentRuimte haalt uit de database de informatie op van de geselecteerde ruimte. Door Single te gebruiken ipv where krijg je daadwerkelijk
                 //één object terug (ipv een list met objecten wanneer je Where zou gebruiken) wat later aangesproken kan worden.
                 //reserveringenCount haalt vervolgens het huidige aantal reserveringen op uit het object
