@@ -39,7 +39,7 @@
             <td>
                 @if (User.IsInRole("Admin"))
                 {
-                <a asp-action="Edit" asp-route-id="@item.Id">Bewerk | </a> 
+                    <a asp-action="Edit" asp-route-id="@item.Id">Bewerk | </a> 
 
 }
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
