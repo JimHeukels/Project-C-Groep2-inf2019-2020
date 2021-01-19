@@ -30,13 +30,12 @@
         <div id="mySidebar" class="sidebar">
             <a href="/User/Home">Home</a>
             <a href="/Locaties">Locaties</a>
-            <a href="/User/Reservation">Reservation</a>
             <a href="/Reserverings">Reserveringen</a>
             <a href="/Identity/Account/Manage/Index">Account</a>
             <a href="/Home/Privacy">Privacy</a>
             @if (User.IsInRole("Admin"))
             {
-                <a href="/AddAdmin">Add User</a>
+                <a href="/AddAdmin">Accounts beheren</a>
             }
 
             <footer class="footer text-muted">

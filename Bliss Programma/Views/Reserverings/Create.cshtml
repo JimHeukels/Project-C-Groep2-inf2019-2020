@@ -4,14 +4,12 @@
 
 
 @{
-    ViewData["Title"] = "Create";
-    Console.WriteLine(ViewData["Prio"]);
-
+    ViewData["Title"] = "Creëer";
 }
 
-<h1>Create</h1>
+<h1>Creëer Reservering</h1>
 
-<h4>Reservering</h4>
+<h4>Maak hier uw gewenste resevering</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -19,7 +17,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Datum" class="control-label"></label>
-                <input asp-for="Datum" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" max="@DateTime.Now.AddDays((int)ViewData["Prio"]).ToString("yyyy-MM-dd")" />
+                <input asp-for="Datum" class="form-control" type="date" value=""/>
                 <span asp-validation-for="Datum" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -40,14 +38,14 @@
                 <select asp-for="RuimteId" class="form-control" asp-items="ViewBag.RuimteId"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Creëer" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Terug naar overzicht</a>
 </div>
 
 @section Scripts {
