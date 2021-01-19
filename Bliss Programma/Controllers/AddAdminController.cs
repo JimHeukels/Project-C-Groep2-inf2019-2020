@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Bliss_Programma.Controllers
 {
-    [Authorize(Roles ="ADMIN")]
+    [Authorize(Roles ="Admin")]
     public class AddAdminController : Controller
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -55,7 +55,7 @@ namespace Bliss_Programma.Controllers
                     
                     if(model.IsAdmin==true)
                     {
-                        await _userManager.AddToRoleAsync(user, "ADMIN");
+                        await _userManager.AddToRoleAsync(user, "Admin");
                     }
                     
 
