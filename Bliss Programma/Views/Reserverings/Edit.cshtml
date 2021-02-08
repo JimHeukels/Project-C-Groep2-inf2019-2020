@@ -1,27 +1,34 @@
-﻿@model Bliss_Programma.Models.Reservering
+﻿@using System.Security.Claims;
+@model Bliss_Programma.Models.Reservering
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Wijzig";
 }
 
-<h1>Edit</h1>
+<h1>Wijzig uw reservering</h1>
 
-<h4>Reservering</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Wijzig">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Datum" class="control-label"></label>
-                <input asp-for="Datum" class="form-control" />
+                <input asp-for="Datum" class="form-control" type="date" />
                 <span asp-validation-for="Datum" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="WerknemerId" class="control-label"></label>
-                <input asp-for="WerknemerId" class="form-control" />
-                <span asp-validation-for="WerknemerId" class="text-danger"></span>
+                @*<label asp-for="WerknemerId" class="control-label"></label>
+                    <input asp-for="WerknemerId" class="form-control" />
+                    <span asp-validation-for="WerknemerId" class="text-danger"></span>*@
+
+                <input type="hidden" asp-for="WerknemerId" class="form-control" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value" readonly="readonly" />
+            </div>
+            <div class="form-group">
+                <label asp-for="WerknemerEmail" class="control-label"></label>
+                <input asp-for="WerknemerEmail" class="form-control" value="@User.FindFirst(ClaimTypes.Name).Value" readonly="readonly" />
+                <span asp-validation-for="WerknemerEmail" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="RuimteId" class="control-label"></label>
@@ -29,14 +36,14 @@
                 <span asp-validation-for="RuimteId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Bewerk" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Terug naar overzicht</a>
 </div>
 
 @section Scripts {

@@ -29,12 +29,19 @@ namespace Bliss_Programma.Controllers
         {
             // var x wrdt hieronder gedeclareerd en ingevuld met een user type. Dit is een standaard type(?) en heeft dus toegang tot gegevens van de gebruiker/sessie
             var x = User.FindFirst(ClaimTypes.NameIdentifier);
+
             // _context is de door ons gedefinieërde 'database' variabele.
-            // vervolgens kunnen we aan de hand van Linq een soort query achtige line schrijven naar die _context veriabele
+            // vervolgens kunnen we aan de hand van Linq een query schrijven naar die _context variabele
             // In de Value variabele wordt standaard dus de id van de gebruiker opgeslagen.
             // Door x.Value dus mee te nemen in de query kunnen we alle reserveringen ophalen van 1 specifieke gebruiker
-            var applicationDbContext = _context.Reservering.Where(y => y.WerknemerId == x.Value).Include(r => r.Ruimte);
-            return View(await applicationDbContext.ToListAsync());
+            var list = _context.Reservering.Include(c => c.Ruimte).ThenInclude(r => r.Locatie).ToList();
+            if (!User.IsInRole("Admin"))
+            {
+                list = list.Where(c => c.WerknemerId == x.Value).ToList();
+            }
+            //var applicationDbContext = _context.Reservering.Where(y => y.WerknemerId == x.Value).Include(r => r.Ruimte);
+
+            return View(list);
         }
 
         // GET: Reserverings/Details/5
@@ -58,10 +65,17 @@ namespace Bliss_Programma.Controllers
 
         // GET: Reserverings/Create
         [Authorize]
-        public IActionResult Create()
+        public IActionResult Create(reservemodel model)
         {
-            ViewData["RuimteId"] = new SelectList(_context.Ruimte, "Id", "Id");
-            return View();
+            ViewData["RuimteId"] = new SelectList(_context.Ruimte, "Id", "Naam");
+            var reserve = new Reservering
+            {
+                Datum = model.Date
+            };
+            var x = User.FindFirst(ClaimTypes.NameIdentifier);
+            var prio = _context.Users.Single(u => u.Id == x.Value).Prioriteit;
+            ViewData["Prio"] = (7 * Int32.Parse(prio));
+            return View(reserve);
         }
 
         // POST: Reserverings/Create
@@ -69,35 +83,44 @@ namespace Bliss_Programma.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Datum,WerknemerId,RuimteId")] Reservering reservering)
+        public async Task<IActionResult> Create([Bind("Id,Datum,WerknemerId,WerknemerEmail,RuimteId")] Reservering reservering)
         {
             if (ModelState.IsValid)
             {
-                //currentRuimte haalt uit de database de informatie op van de geslecteerde ruimte. Door Single te gebruiken ipv where krijg je daadwerkelijk
+
+
+                //currentRuimte haalt uit de database de informatie op van de geselecteerde ruimte. Door Single te gebruiken ipv where krijg je daadwerkelijk
                 //één object terug (ipv een list met objecten wanneer je Where zou gebruiken) wat later aangesproken kan worden.
                 //reserveringenCount haalt vervolgens het huidige aantal reserveringen op uit het object
                 var currentRuimte = _context.Ruimte.Single(y => y.Id == reservering.RuimteId);
-                int reserveringenCount = _context.Reservering.Count(y => y.RuimteId == reservering.RuimteId);
+                int reserveringenCount = _context.Reservering.Count(y => y.RuimteId == reservering.RuimteId && y.Datum.Date == reservering.Datum.Date);
                 
                 //Doordat we hierboven list hebben gebruikt kunnen we nu maxPersonenRuimte vullen door het currentRuimte object direct aan te spreken.
                 var maxPersonenRuimte = currentRuimte.MaxWerkplekken;
-                
+
+                if (_context.Reservering.FirstOrDefault(x => x.WerknemerId == reservering.WerknemerId && x.Datum.Date == reservering.Datum.Date) != null)
+                {
+                    //Gebruiker wordt nu teruggestuurd naar de reservering index pagina
+                    //todo: geef de gebruiker een melding mee dat hij niet kan reserveren omdat er geen plek is.
+                    TempData["Status"] = "U heeft deze ruimte al gereserveerd deze dag, uw reservering is niet toegevoegd.";
+                    return RedirectToAction(nameof(Index));
+                }
 
                 if (reserveringenCount < maxPersonenRuimte)
                 {
                     _context.Add(reservering);
                     await _context.SaveChangesAsync();
+                    TempData["Status"] = "Uw reservering is succesvol toegevoegd.";
                     return RedirectToAction(nameof(Index));
                 }
 
                 else
                 {
-                    //Gebruiker wordt nu terug gestuurd naar de reservering index pagina
+                    //Gebruiker wordt nu teruggestuurd naar de reservering index pagina
                     //todo: geef de gebruiker een melding mee dat hij niet kan reserveren omdat er geen plek is.
+                    TempData["Status"] = "Deze ruimte is vol, uw reservering is niet toegevoegd.";
                     return RedirectToAction(nameof(Index));
                 }
-
-
             }
             ViewData["RuimteId"] = new SelectList(_context.Ruimte, "Id", "Id", reservering.RuimteId);
             return View(reservering);
@@ -125,32 +148,70 @@ namespace Bliss_Programma.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Datum,WerknemerId,RuimteId")] Reservering reservering)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Datum,WerknemerId,WerknemerEmail,RuimteId")] Reservering reservering)
         {
-            if (id != reservering.Id)
-            {
-                return NotFound();
-            }
+            //if (id != reservering.Id)
+            //{
+            //    return NotFound();
+            //}
+
+            //if (ModelState.IsValid)
+            //{
+            //    try
+            //    {
+            //        _context.Update(reservering);
+            //        await _context.SaveChangesAsync();
+            //    }
+            //    catch (DbUpdateConcurrencyException)
+            //    {
+            //        if (!ReserveringExists(reservering.Id))
+            //        {
+            //            return NotFound();
+            //        }
+            //        else
+            //        {
+            //            throw;
+            //        }
+            //    }
+            //    return RedirectToAction(nameof(Index));
+            //}
+            //ViewData["RuimteId"] = new SelectList(_context.Ruimte, "Id", "Id", reservering.RuimteId);
+            //return View(reservering);
 
             if (ModelState.IsValid)
             {
-                try
+                //currentRuimte haalt uit de database de informatie op van de geselecteerde ruimte. Door Single te gebruiken ipv where krijg je daadwerkelijk
+                //één object terug (ipv een list met objecten wanneer je Where zou gebruiken) wat later aangesproken kan worden.
+                //reserveringenCount haalt vervolgens het huidige aantal reserveringen op uit het object
+                var currentRuimte = _context.Ruimte.Single(y => y.Id == reservering.RuimteId);
+                int reserveringenCount = _context.Reservering.Count(y => y.RuimteId == reservering.RuimteId && y.Datum.Date == reservering.Datum.Date);
+
+                //Doordat we hierboven list hebben gebruikt kunnen we nu maxPersonenRuimte vullen door het currentRuimte object direct aan te spreken.
+                var maxPersonenRuimte = currentRuimte.MaxWerkplekken;
+
+                if (_context.Reservering.FirstOrDefault(x => x.WerknemerId == reservering.WerknemerId && x.Datum.Date == reservering.Datum.Date) != null)
+                {
+                    //Gebruiker wordt nu teruggestuurd naar de reservering index pagina
+                    //todo: geef de gebruiker een melding mee dat hij niet kan reserveren omdat er geen plek is.
+                    TempData["Status"] = "U heeft deze ruimte al gereserveerd deze dag, uw reservering is niet aangepast.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                if (reserveringenCount < maxPersonenRuimte)
                 {
                     _context.Update(reservering);
                     await _context.SaveChangesAsync();
+                    TempData["Status"] = "Uw reservering is succesvol aangepast.";
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+
+                else
                 {
-                    if (!ReserveringExists(reservering.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //Gebruiker wordt nu teruggestuurd naar de reservering index pagina
+                    //todo: geef de gebruiker een melding mee dat hij niet kan reserveren omdat er geen plek is.
+                    TempData["Status"] = "Deze ruimte is vol, uw reservering is niet aangepast.";
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
             }
             ViewData["RuimteId"] = new SelectList(_context.Ruimte, "Id", "Id", reservering.RuimteId);
             return View(reservering);

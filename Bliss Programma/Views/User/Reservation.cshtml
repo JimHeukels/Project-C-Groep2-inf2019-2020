@@ -1,4 +1,4 @@
-﻿
+﻿@model Bliss_Programma.Models.reservemodel
 @{
     ViewData["Title"] = "Reservation";
 }
@@ -16,6 +16,22 @@
     <div class="text-lg-left">
         <h1 class="display-4">Choose Date</h1>
     </div>
+    <div class="col-md-4">
+        <form asp-action="Create" asp-controller="Reserverings" method="get">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="Date" class="form-control" type="date" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="maak reservering" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    @*<div>
+            <button onclick="ForwardToReservering()">maak reservering</button>
+        </div>*@
 
     <div id="myCalendarWrapper">
         <script>
@@ -26,16 +42,6 @@
                 min: new Date(),
                 max: new Date(nextYear, 0) // NOTE: new Date(nextYear, 10) is "Sun Nov 01 <nextYear>"
             });
-
-
-            const currentDateElement = document.getElementById('current-date');
-            currentDateElement.textContent = myCalender.value;
-
-            const currentDayElement = document.getElementById('current-day');
-            currentDayElement.textContent = myCalender.value.getDay();
-
-            const currentToDateString = document.getElementById('current-datestring');
-            currentToDateString.textContent = myCalender.value.toDateString();
 
 
             myCalender.onValueChange((currentValue) => {

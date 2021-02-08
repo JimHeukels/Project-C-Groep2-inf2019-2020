@@ -4,19 +4,26 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Overzicht reserveringen</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Maak nieuwe reservering</a>
 </p>
+<b> @TempData["Status"]</b>
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Datum)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.WerknemerId)
+            </th>*@
+            <th>
+                @Html.DisplayNameFor(model => model.WerknemerEmail)
+            </th>
+            <th>
+                Locatie
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Ruimte)
@@ -28,18 +35,28 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Datum)
+                @item.Datum.ToString("dd-MM-yyyy")
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.WerknemerId)
+            </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.WerknemerEmail)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Ruimte.Id)
+                @item.Ruimte.Locatie.Plaatsnaam
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                @Html.DisplayFor(modelItem => item.Ruimte.Naam)
+            </td>
+            <td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Id">Bewerk | </a> 
+
+}
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.Id">Verwijder</a>
             </td>
         </tr>
 }
