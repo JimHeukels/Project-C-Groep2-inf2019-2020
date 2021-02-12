@@ -47,9 +47,9 @@ namespace Bliss_Programma.Controllers
         }
 
         // GET: Ruimtes/Create
-        public IActionResult Create()
+        public IActionResult Create(int ? id)
         {
-            ViewData["LocatieId"] = new SelectList(_context.Locatie, "Id", "Id");
+            ViewData["LocatieId"] = id;
             return View();
         }
 
@@ -62,11 +62,12 @@ namespace Bliss_Programma.Controllers
         {
             if (ModelState.IsValid && (int)Math.Round(ruimte.Oppervlakte / 1.95) >= ruimte.MaxWerkplekken)
             {
+                ruimte.Id = 0;
                 _context.Add(ruimte);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Locaties", new { id = ruimte.LocatieId });
             }
-            ViewData["LocatieId"] = new SelectList(_context.Locatie, "Id", "Id", ruimte.LocatieId);
+            ViewData["LocatieId"] = ruimte.LocatieId;
             ViewData["Error"] = "De maximum aantal werkplekken voor deze ruimte is " + (int)Math.Round(ruimte.Oppervlakte / 1.95);
             return View(ruimte);
         }
@@ -118,7 +119,7 @@ namespace Bliss_Programma.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Locaties", new { id = ruimte.LocatieId });
             }
             ViewData["LocatieId"] = new SelectList(_context.Locatie, "Id", "Id", ruimte.LocatieId);
             ViewData["Error"] = "De maximum aantal werkplekken voor deze ruimte is " + Functies.maxbezetting(ruimte.Oppervlakte);
@@ -152,7 +153,7 @@ namespace Bliss_Programma.Controllers
             var ruimte = await _context.Ruimte.FindAsync(id);
             _context.Ruimte.Remove(ruimte);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Locaties", new { id = ruimte.LocatieId });
         }
 
         private bool RuimteExists(int id)

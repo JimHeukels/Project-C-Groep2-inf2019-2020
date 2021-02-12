@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bliss_Programma.Data;
 using Bliss_Programma.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bliss_Programma.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class LocatiesController : Controller
     {
         private readonly ApplicationDbContext _context;

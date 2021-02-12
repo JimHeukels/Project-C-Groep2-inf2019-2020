@@ -29,7 +29,10 @@
     {
         <div id="mySidebar" class="sidebar">
             <a href="/User/Home">Home</a>
-            <a href="/Locaties">Locaties</a>
+            @if (User.IsInRole("Admin"))
+            {
+                <a href="/Locaties">Locaties</a>
+            }
             <a href="/Reserverings">Reserveringen</a>
             <a href="/Identity/Account/Manage/Index">Account</a>
             <a href="/Home/Privacy">Privacy</a>

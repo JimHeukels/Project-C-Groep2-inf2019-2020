@@ -17,7 +17,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Datum" class="control-label"></label>
-                <input asp-for="Datum" class="form-control" type="date" value=""/>
+                <input asp-for="Datum" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" max="@DateTime.Now.AddDays((int)ViewData["Prio"]).ToString("yyyy-MM-dd")"/>
                 <span asp-validation-for="Datum" class="text-danger"></span>
             </div>
             <div class="form-group">
