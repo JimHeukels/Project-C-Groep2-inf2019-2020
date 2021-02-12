@@ -10,6 +10,7 @@ using Bliss_Programma.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using Bliss_Programma.Services;
 
 namespace Bliss_Programma.Controllers
 {
@@ -74,7 +75,7 @@ namespace Bliss_Programma.Controllers
             };
             var x = User.FindFirst(ClaimTypes.NameIdentifier);
             var prio = _context.Users.Single(u => u.Id == x.Value).Prioriteit;
-            ViewData["Prio"] = (7 * Int32.Parse(prio));
+            ViewData["Prio"] = Functies.Prio(prio);
             return View(reserve);
         }
 
