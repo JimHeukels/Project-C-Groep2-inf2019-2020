@@ -28,6 +28,7 @@
                 <input asp-for="Oppervlakte" class="form-control" />
                 <span asp-validation-for="Oppervlakte" class="text-danger"></span>
             </div>
+            @ViewBag.Error
             <div class="form-group">
                 <label asp-for="MaxWerkplekken" class="control-label"></label>
                 <input asp-for="MaxWerkplekken" class="form-control" />

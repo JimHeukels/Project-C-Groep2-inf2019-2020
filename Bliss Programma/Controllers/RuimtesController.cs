@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bliss_Programma.Data;
 using Bliss_Programma.Models;
+using Bliss_Programma.Services;
 
 namespace Bliss_Programma.Controllers
 {
@@ -59,13 +60,14 @@ namespace Bliss_Programma.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Lengte,Breedte,Oppervlakte,MaxWerkplekken,Naam,LocatieId")] Ruimte ruimte)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && (int)Math.Round(ruimte.Oppervlakte / 1.95) >= ruimte.MaxWerkplekken)
             {
                 _context.Add(ruimte);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["LocatieId"] = new SelectList(_context.Locatie, "Id", "Id", ruimte.LocatieId);
+            ViewData["Error"] = "De maximum aantal werkplekken voor deze ruimte is " + (int)Math.Round(ruimte.Oppervlakte / 1.95);
             return View(ruimte);
         }
 
@@ -98,7 +100,7 @@ namespace Bliss_Programma.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && Functies.maxbezetting(ruimte.Oppervlakte) >= ruimte.MaxWerkplekken)
             {
                 try
                 {
@@ -119,6 +121,7 @@ namespace Bliss_Programma.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["LocatieId"] = new SelectList(_context.Locatie, "Id", "Id", ruimte.LocatieId);
+            ViewData["Error"] = "De maximum aantal werkplekken voor deze ruimte is " + Functies.maxbezetting(ruimte.Oppervlakte);
             return View(ruimte);
         }
 
