@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Bliss_Programma.Controllers
 {
-    //[Authorize(Roles ="Admin")]
+    //[Authorize(Roles = "Admin")]
     public class AddAdminController : Controller
     {
         private readonly SignInManager<ApplicationUser> _signInManager;

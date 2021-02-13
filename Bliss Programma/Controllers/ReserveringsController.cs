@@ -115,19 +115,21 @@ namespace Bliss_Programma.Controllers
         // GET: Reserverings/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var reservering = await _context.Reservering.FindAsync(id);
+                if (reservering == null)
+                {
+                    return NotFound();
+                }
+                ViewData["RuimteId"] = new SelectList(_context.Ruimte, "Id", "Id", reservering.RuimteId);
+                return View(reservering); 
             }
 
-            var reservering = await _context.Reservering.FindAsync(id);
-            if (reservering == null)
-            {
-                return NotFound();
-            }
-            ViewData["RuimteId"] = new SelectList(_context.Ruimte, "Id", "Id", reservering.RuimteId);
-            return View(reservering);
-        }
+        
 
         // POST: Reserverings/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
